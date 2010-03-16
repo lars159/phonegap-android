@@ -38,7 +38,6 @@ public class NetworkManager {
 			String type = info.getTypeName();
 			return type.equals("WIFI");
 		}
-
 		return false;
 	}
 	
