@@ -1,12 +1,39 @@
 #!/usr/bin/env ruby
 require 'fileutils'
 
-# ./droidgap /Users/brianleroux/Code/android-sdk-mac MyApp com.westcoastlogic example /Users/brianleroux/Desktop/MyApp
-class Build
-  attr_reader :android_sdk_path, :name, :pkg, :www, :path
+# ./droidgap pkg /Users/brianleroux/Desktop/MyApp
+#
+# Package
+# 
+# Generates an Android project from a PhoneGap project. Assumes a valid PhoneGap project structure:
+# 
+# project
+#  |-pkg ... android project files
+#  |-bin ... release files
+#  '-www ... html, css and javascript (optional config.xml for additional properties)
+#
+class Package
+  attr_reader :name, :pkg, :www, :path
   
-  def initialize(*a)
-    @android_sdk_path, @name, @pkg, @www, @path = a
+  def initialize(path)
+    
+    # validates we have a correct sdk path
+    # validtes a valid package
+    
+    # TODO need to generate these 
+    # @name, @pkg, @www, @path = a
+    @android_sdk_path = '/Users/brianleroux/Code/android-sdk-mac_86' # `which android`
+    
+    # use app name to extract package and name if no config.xml is found
+    @pkg = 
+    @name = 
+    
+    
+    @path = path
+    @www = File.join(@path, 'www')
+    
+    
+    
     @android_dir = File.expand_path(File.dirname(__FILE__))
     @framework_dir = File.join(@android_dir, "framework")
   end
@@ -151,20 +178,132 @@ class Build
   #
 end
 
+class Runner
 
-if ARGV.length == 5
-  Build.new(*ARGV).run
-else
-  puts <<-EOF
+  def apk
+    Package.new(args).run
+  end
   
-  DroidGap: PhoneGap/Android Project Generator
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  def jar
+    `ant jar`
+  end 
   
-  Creates a fresh app for hybrid mobile web hacking. Delicious robot!
+  def list
+    `adb devices`
+  end 
+  
+  def install
+    `apk -s 0123456789012 install phonegap.apk`
+  end
+  
+  def log
+    
+  end
+end
+
+
+# ---------------------------------------------------------- #
+#                                                            #
+#                   command line interface                   #
+#                                                            #
+# ---------------------------------------------------------- #
+
+if ARGV.first == 'gen'
+  puts "Generating an example project..."
+end 
+
+if ARGV.first == 'run'
+  puts "Running PhoneGap/Android..." 
+  Build.new(android_sdk_path, name, pkg, www, path).run
+end 
+
+if ARGV.first == 'pkg'
+  puts "Packaging a PhoneGap project..." 
+  ARGV.slice! 0 # remove the cmd
+  Package.new(*ARGV).run
+end 
+
+if ARGV.first == 'ship'
+  puts "PHONEGAP SHIP NOT IMPLEMENTED" 
+end 
+
+if ARGV.first.nil? || ARGV.first == 'help'
+  help = <<-EOF
+  
+  DroidGap: PhoneGap/Android Dev Script
+  -------------------------------------
+  
+  Useful utilities for devlopers building mobile apps using PhoneGap for Android.
   
   Usage:
   
-    ./droidgap <android_sdk_path> <name> <package_name> <www> <path>
+  droidgap <command> <parameters>
+  
+  Commands:
+  
+  help ... See this message. Type help <command name> to see specific help topics.
+  gen .... Generate an example PhoneGap application to current directory.
+  pkg .... Creates an Android compatable project from a www folder. Careful, this clobbers previous packaging.
+  run .... Launch widget or www folder to first device found and attach a logger that listens for console.log statements.
+  ship ... Build and sign an APK suitable for submission to an Android Marketplace.
+    
+  Quickstart:
+  
+  $ droidgap gen example 
+  $ cd example
+  $ droidgap run
+  
+  EOF
+  
+  gen = <<-EOF
+  
+  DroidGap Generate
+  -----------------
+  
+  Generate an example PhoneGap application to path supplied or current working directory if none is supplied.
+  
+  Usage:
+  
+    droidgap gen [path]
+  
+  EOF
+  
+  run = <<-EOF
+  
+  DroidGap Run
+  ------------
+  
+  Launches PhoneGap project to first device found and attaches a logger that listens for console.log statements.
+  
+  Usage:
+
+    droidgap run <path>
+    
+  EOF
+  
+  ship = <<-EOF
+  
+  DroidGap Ship
+  -------------
+  
+  Build and sign an APK suitable for submission to an Android Marketplace.
+  
+  Usage:
+  
+    droidgap ship <path>
+  
+  EOF
+  
+  pkg = <<-EOF
+  
+  DroidGap Package
+  ----------------
+  
+  Creates an Android compatable project from a www folder. Careful, this clobbers previous packaging.
+  
+  Usage:
+  
+    droidgap pkg <path>
   
   Params:
   
@@ -175,4 +314,5 @@ else
   path ............... The path to generate the Android application.
   
   EOF
+  puts ARGV[1].nil? ? help : eval(ARGV[1])
 end
