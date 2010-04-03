@@ -3,4 +3,5 @@ bin
 gen
 assets/www/phonegap.js
 local.properties
-framework/phonegap.jar
+src/phonegap.jar
+example/phonegap.js

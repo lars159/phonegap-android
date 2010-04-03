@@ -13,7 +13,7 @@
 # '-www ......... html, css and javascript (optional config.xml for additional properties)
 #
 class Generate
-  def initialize(name=nil)
+  def initialize(name)
     if name.nil?
       puts "You need to supply a name to generate a project. Try this:\n\ndroidgap gen MyApp\n\n"
       return

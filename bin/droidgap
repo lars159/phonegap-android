@@ -14,12 +14,15 @@ require File.join(ROOT, "lib", "run.rb")
 # droidgap gen [app name]
 Generate.new(ARGV[1]) if ARGV.first == 'gen'
 
+# droidgap pkg [path to phonegap project]
+Package.new(ARGV[1]) if ARGV.first == 'pkg'
+
 # droidgap run [optional directory]
 Run.new if ARGV.first == 'run'
 
 puts "droidgap ship not implemented" if ARGV.first == 'ship'
 
-puts "droidgap pkg not implemented" if ARGV.first == 'pkg'
+
 
 
 =begin

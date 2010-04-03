@@ -1,42 +1,43 @@
-# ./droidgap pkg /Users/brianleroux/Desktop/MyApp
-#
 # Package
 # 
-# Generates an Android project from a PhoneGap project. Assumes a valid PhoneGap project structure:
-# 
-# project
-#  |-pkg ... android project files
-#  |-bin ... release files
-#  '-www ... html, css and javascript (optional config.xml for additional properties)
+# Generates an Android project from a PhoneGap project. Assumes a valid PhoneGap project structure.
+#
+# TODO validtes a valid package
+# TODO add ability to config.xml (for pkg, android version target)
+
+#
+# creates an android project in project/tmp/projectname
+#
 #
 class Package
   attr_reader :name, :pkg, :www, :path
   
+  # @name, @pkg, @www, @path = a
   def initialize(path)
+    @android_sdk_path = `which android`.gsub('/tools/android','')
     
-    # validates we have a correct sdk path
-    # validtes a valid package
+    # if no path is supplied uses current directory for project
+    if path.nil?
+      path = FileUtils.pwd
+      unless File.exists? File.join(path, 'www')
+        puts "No www found here... pls specify a path to a valid PhoneGap project directory."
+        return 
+      end 
+    end 
     
-    # TODO need to generate these 
-    # @name, @pkg, @www, @path = a
-    @android_sdk_path = '/Users/brianleroux/Code/android-sdk-mac_86' # `which android`
-    
-    # use app name to extract package and name if no config.xml is found
-    @pkg = 
-    @name = 
-    
-    
-    @path = path
-    @www = File.join(@path, 'www')
-    
-    
-    
-    @android_dir = File.expand_path(File.dirname(__FILE__))
+    # creates tmp/android directory in project to create working android project
+    @path = File.join(path, "tmp", "android")
+    @www = File.join(path, 'www')
+    @name = path.split('/').last
+    @android_dir = File.expand_path(File.dirname(__FILE__).gsub('lib',''))
     @framework_dir = File.join(@android_dir, "src")
+    @pkg = "com.phonegap" # TODO make this come from config and/or use project name
+    run
   end
   
   # runs the build script
   def run
+    clobber
     build_jar
     create_android
     include_www
@@ -44,13 +45,17 @@ class Package
     copy_libs
     add_name_to_strings
     write_java
-	  puts "Complete!"
   end 
+  
+  # kills and replaces tmp/android
+  def clobber
+    FileUtils.rm_r @path
+    FileUtils.mkdir_p @path
+  end
   
   # removes local.properties and recreates based on android_sdk_path 
   # then generates framework/phonegap.jar
   def build_jar
-    puts "Building the JAR..."
     %w(local.properties phonegap.js phonegap.jar).each do |f|
       FileUtils.rm File.join(@framework_dir, f) if File.exists? File.join(@framework_dir, f)
     end
@@ -63,25 +68,19 @@ class Package
   end
 
   # runs android create project
-  # TODO need to allow more flexible SDK targetting
-  # TODO validate Android SDK
+  # TODO need to allow more flexible SDK targetting via config.xml
   def create_android
-    android_exec = File.join(@android_sdk_path, "tools", "android");
     target_id = 5 
-    puts "Creating Android project... #{ target_id }"
-    `"#{android_exec}" create project -t #{ target_id } -k #{ @pkg } -a #{ @name } -n #{ @name } -p #{ @path }`
+    `android create project -t #{ target_id } -k #{ @pkg } -a #{ @name } -n #{ @name } -p #{ @path }`
   end
   
   def include_www
-    puts "Adding www folder to project..."
-    
     FileUtils.mkdir_p File.join(@path, "assets", "www")
     FileUtils.cp_r File.join(@www, "."), File.join(@path, "assets", "www")
   end
 
   # creates an AndroidManifest.xml for the project
   def generate_manifest
-    puts "Generating manifest..."
     manifest = ""
     open(File.join(@framework_dir, "AndroidManifest.xml"), 'r') do |old|
       manifest = old.read
@@ -96,8 +95,6 @@ class Package
   # copies stuff from framework into the project
   # TODO need to allow for www import inc icon
   def copy_libs
-    puts "Copying over libraries and assets and creating phonegap.js..."
-    
     framework_res_dir = File.join(@framework_dir, "res")
     app_res_dir = File.join(@path, "res")
 
@@ -133,7 +130,6 @@ class Package
   
   # puts app name in strings
   def add_name_to_strings
-    puts "Adding some application name to strings.xml..."
     x = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
     <resources>
       <string name=\"app_name\">#{ @name }</string>
@@ -148,7 +144,6 @@ class Package
   # this is so fucking unholy yet oddly beautiful
   # not sure if I should thank Ruby or apologize for this abusive use of string interpolation
   def write_java
-	  puts "Writing application Java code..."
     j = "
     package #{ @pkg };
 
@@ -166,9 +161,7 @@ class Package
         }
     }
     "
-    
     code_dir = File.join(@path, "src", @pkg.gsub('.', File::SEPARATOR))
-
     FileUtils.mkdir_p(code_dir)
     open(File.join(code_dir, "#{@name}.java"),'w') { |f| f.puts j.gsub('    ','') }
   end
