@@ -7,31 +7,50 @@ Pre Requisites
 - Java JDK 1.5
 - Android SDK Package [http://developer.android.com](http://developer.android.com)
 - Apache ANT
-- Ruby
+- Ruby (Optional, see section: DroidGap with JRuby)
 
 Install
 -------
 
 Add PhoneGap/Android to your PATH variable like so:
 
-export PATH=$PATH:~/phonegap-android/bin
+    export PATH=$PATH:~/phonegap-android/bin
 
 DroidGap: PhoneGap/Android Dev Script
 -------------------------------------
 
 Useful utilities for developers building mobile apps using PhoneGap for Android.
 
-<pre>    
-    ./droidgap [android_sdk_path] [name] [package_name] [www] [path]
+Usage:
 
-    android_sdk_path ... The path to your Android SDK install.
-    name ............... The name of your application.
-    package_name ....... The name of your package (For example: com.nitobi.demo)
-    www ................ The path to your www folder. (Wherein your HTML, CSS and JS app is.)
-    path ............... The path to generate the application.
+<pre>droidgap [command] [parameters]</pre>
+
+Commands:    
+
+<pre>
+help ... See this message. Type help [command name] to see specific help topics.
+gen .... Generate an example PhoneGap application to current directory.
+pkg .... Creates an Android compatible project from a www folder. Careful, this clobbers previous packaging.
+run .... Launch widget or www folder to first device found and attach a logger that listens for console.log statements.
+ship ... Build and sign an APK suitable for submission to an Android Marketplace.
 </pre>
 
-Thats it!
+Quickstart:
+
+<pre>
+    $ droidgap gen example 
+    $ cd example
+    $ droidgap run
+</pre>
+
+DroidGap with JRuby
+-------------------
+
+If you want to use the droidgap command but do not want to install Ruby then you can call it using jruby jar included in the lib folder. All the options are the same and a call looks like this:
+
+    java -jar jruby-complete-1.4.0RC1.jar ../bin/droidgap help run
+    
+Keep in mind this will be slower.    
 
 Importing a PhoneGap/Android app into Eclipse
 ---------------------------------------------
@@ -44,8 +63,10 @@ Importing a PhoneGap/Android app into Eclipse
 6. Click on the Target tab and select Manual (this way you can choose the emulator or device to build to).
 
 
-Command Line Hacks
-==================
+Common Command Line Tasks
+=========================
+
+Running Mobile Spec
     
 Compile an APK
 ---
