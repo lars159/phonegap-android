@@ -1,9 +1,9 @@
 # ProjectName
 # |
-# |-tmp ......... Temporary directory for generated projects to launch into emulators or devices. Ignored by the end developer.
+# |-tmp ......... Temporary directory for generated projects to launch into emulators or devices. Ignore.
 # | '-android ... A generated Android project. 
 # |
-# |-opt ......... Platform specific code. Plugins install native code here.
+# |-opt ......... Optional platform specific code. Plugins install native code here.
 # | |-android ... Java files
 # | '-iphone .... Objective C
 # |

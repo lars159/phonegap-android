@@ -1,13 +1,9 @@
 # Package
 # 
-# Generates an Android project from a PhoneGap project. Assumes a valid PhoneGap project structure.
+# Generates an Android project from a valid PhoneGap project directory and puts it in [PROJECT ROOT]/tmp/android
 #
-# TODO validtes a valid package
+# TODO validate project directory 
 # TODO add ability to config.xml (for pkg, android version target)
-
-#
-# creates an android project in project/tmp/projectname
-#
 #
 class Package
   attr_reader :name, :pkg, :www, :path
@@ -26,6 +22,7 @@ class Package
     end 
     
     # creates tmp/android directory in project to create working android project
+    @name = path.split("/").last
     @path = File.join(path, "tmp", "android")
     @www = File.join(path, 'www')
     @name = path.split('/').last

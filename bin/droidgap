@@ -18,24 +18,12 @@ Generate.new(ARGV[1]) if ARGV.first == 'gen'
 Package.new(ARGV[1]) if ARGV.first == 'pkg'
 
 # droidgap run [optional directory]
-Run.new if ARGV.first == 'run'
+Run.new(ARGV[1]) if ARGV.first == 'run'
+
+# droidgap log
+`adb logcat` if ARGV.first == 'log'
 
 puts "droidgap ship not implemented" if ARGV.first == 'ship'
-
-
-
-
-=begin
-if ARGV.first == 'pkg'
-  ARGV.slice! 0 # remove the cmd
-  Package.new(*ARGV).run
-end
-
-if ARGV.first == 'run'
-  puts "Running PhoneGap/Android..." 
-  Build.new(android_sdk_path, name, pkg, www, path).run
-end 
-=end
 
 
 if ARGV.first.nil? || ARGV.first == 'help'
@@ -55,7 +43,8 @@ if ARGV.first.nil? || ARGV.first == 'help'
   help ... See this message. Type help <command name> to see specific help topics.
   gen .... Generate an example PhoneGap application to current directory.
   pkg .... Creates an Android compatible project from a www folder. Careful, this clobbers previous packaging.
-  run .... Launch widget or www folder to first device found and attach a logger that listens for console.log statements.
+  run .... Launch widget or www folder to first device found.
+  log .... Attach a logger that listens for console.log statements.
   ship ... Build and sign an APK suitable for submission to an Android Marketplace.
     
   Quickstart:
@@ -116,7 +105,7 @@ if ARGV.first.nil? || ARGV.first == 'help'
   
     droidgap pkg <path>
   
-  Params:
+  DEPRECATED and to be moved into config.xml:
   
   android_sdk_path ... The path to your Android SDK install.
   name ............... The name of your application.
