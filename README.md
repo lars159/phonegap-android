@@ -31,7 +31,8 @@ Commands:
 help ... See this message. Type help [command name] to see specific help topics.
 gen .... Generate an example PhoneGap application to current directory.
 pkg .... Creates an Android compatible project from a www folder. Careful, this clobbers previous packaging.
-run .... Launch widget or www folder to first device found and attach a logger that listens for console.log statements.
+run .... Installs a valid PhoneGap Project to first device found.
+log .... Attach a logger that listens for console.log statements.
 ship ... Build and sign an APK suitable for submission to an Android Marketplace.
 </pre>
 
@@ -43,6 +44,12 @@ Quickstart:
     $ droidgap run
 </pre>
 
+Launch your app and start a logger with:
+
+<pre>
+    $ droidgap log
+</pre>
+
 DroidGap with JRuby
 -------------------
 
@@ -50,7 +57,7 @@ If you want to use the droidgap command but do not want to install Ruby then you
 
     java -jar jruby-complete-1.4.0RC1.jar ../bin/droidgap help run
     
-Keep in mind this will be slower.    
+Keep in mind this will be slower due to JVM warmup.
 
 Importing a PhoneGap/Android app into Eclipse
 ---------------------------------------------
@@ -67,6 +74,9 @@ Common Command Line Tasks
 =========================
 
 Running Mobile Spec
+---
+
+TODO need content here
     
 Compile an APK
 ---
