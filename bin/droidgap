@@ -43,7 +43,7 @@ if ARGV.first.nil? || ARGV.first == 'help'
   help ... See this message. Type help <command name> to see specific help topics.
   gen .... Generate an example PhoneGap application to current directory.
   pkg .... Creates an Android compatible project from a www folder. Careful, this clobbers previous packaging.
-  run .... Launch widget or www folder to first device found.
+  run .... Installs a valid PhoneGap Project to first device found.
   log .... Attach a logger that listens for console.log statements.
   ship ... Build and sign an APK suitable for submission to an Android Marketplace.
     
@@ -51,7 +51,11 @@ if ARGV.first.nil? || ARGV.first == 'help'
   
   $ droidgap gen example 
   $ cd example
-  $ droidgap run
+  $ droidgap run 
+
+  Now you can launch your app and optionally start a logger with:
+  
+  $ droidgap log
   
   EOF
   
@@ -91,6 +95,19 @@ if ARGV.first.nil? || ARGV.first == 'help'
   Usage:
   
     droidgap ship <path>
+  
+  EOF
+  
+  log = <<-EOF
+  
+  DroidGap Log
+  -------------
+  
+  Launches LogCat
+  
+  Usage:
+  
+    droidgap log
   
   EOF
   

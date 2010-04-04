@@ -4,6 +4,7 @@
 #
 # TODO validate project directory 
 # TODO add ability to config.xml (for pkg, android version target)
+# TODO ensure the phonegap.js file is overwritten every single time into the correct tmp dir
 #
 class Package
   attr_reader :name, :pkg, :www, :path
@@ -46,7 +47,7 @@ class Package
   
   # kills and replaces tmp/android
   def clobber
-    FileUtils.rm_r @path
+    FileUtils.rm_r(@path) if File.exists? @path
     FileUtils.mkdir_p @path
   end
   
