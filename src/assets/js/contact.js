@@ -33,6 +33,27 @@ var Contacts = function()
   this.records = [];  
 }
 
+
+
+
+/* add contact to phonebook.
+* example: sample_contact = { 'firstName': firstName, 'lastName' : lastName, 'phoneNumber' : phoneNumber };navigator.contacts.newContact(sample_contact, addContact_Return);
+* @param the contact object containg the firstName,lastName,phoneNumber note: don't handel email
+* @param {function} successCallbackCallback function on succsses
+*/
+
+
+
+Contacts.prototype.newContact = function(contact, callback)
+{
+	debug.log("newContact " +contact['firstName'] +" " +contact['lastName'] +" " +contact['phoneNumber']);
+	this.win = callback; 
+	ContactHook.newContact(contact['firstName'] + contact['lastName'] ,contact['phoneNumber']);
+ 
+	
+}
+
+
 Contacts.prototype.find = function(obj, win, fail)
 {
   if(obj.name != null)

@@ -287,5 +287,44 @@ public class ContactManager {
 		return email;		
 	}
 	
+
+	
+    public void newContact(String name, String nummber)
+    {
+            Log.d("ContactManager", "Add " +name +" : " +nummber  );
+            Uri phoneUri = null;
+            Uri emailUri = null;
+
+            ContentResolver cr = mApp.getContentResolver();
+
+		    ContentValues values = new ContentValues();
+
+            values.put(People.NAME, name);
+            values.put(People.STARRED, 1);
+
+            Uri uri = cr.insert(People.CONTENT_URI, values);
+
+            phoneUri = Uri.withAppendedPath(uri, People.Phones.CONTENT_DIRECTORY);
+            Log.d("ContactManager", "Uri " +uri);
+
+            values.clear();
+            values.put(People.Phones.TYPE, People.Phones.TYPE_MOBILE);
+            values.put(People.Phones.NUMBER, nummber);
+            cr.insert(phoneUri, values);
+
+            emailUri = Uri.withAppendedPath(uri,People.ContactMethods.CONTENT_DIRECTORY);
+
+            values.clear();
+            values.put(People.ContactMethods.KIND, Contacts.KIND_EMAIL);
+//            values.put(People.ContactMethods.DATA, email);
+            values.put(People.ContactMethods.TYPE, People.ContactMethods.TYPE_HOME);
+            cr.insert(emailUri, values);
+            Log.d("ContactManager", "emailUri " +emailUri);
+            mView.loadUrl("javascript:navigator.contacts.droidAddDone()");
+   	     
+
+    } 
+	
+
 	
 }
