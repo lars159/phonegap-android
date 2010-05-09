@@ -32,7 +32,6 @@ public class NetworkManager {
 	public boolean isWifiActive()
 	{
 		NetworkInfo info = sockMan.getActiveNetworkInfo();
-		
 		if(info != null)
 		{
 			String type = info.getTypeName();
@@ -45,7 +44,7 @@ public class NetworkManager {
 	{
 		if (uri.indexOf("http://") == -1)
 			uri = "http://" + uri;
-		    boolean reached = isAvailable();
+		boolean reached = isAvailable();
 		try {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpGet httpget = new HttpGet(uri);
